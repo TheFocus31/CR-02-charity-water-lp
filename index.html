@@ -1,47 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charity Water Landing Page</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charity: Water</title>
+  <!-- Import fonts to match brand styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Open Sans', sans-serif; background-color: #1c1c1c; color: #ffffff; line-height: 1.6; }
+
+    /* Header Styles */
+    header { background-color: #1c1c1c; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s ease; }
+    header:hover { background-color: #222222; }
+
+    .logo { display: flex; align-items: center; font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 0.2em; text-transform: lowercase; white-space: nowrap; transition: transform 0.3s ease; }
+    .logo:hover { transform: scale(1.05); }
+    .logo img { margin-right: 0.5rem; }
+
+    .hamburger { display: block; cursor: pointer; transition: opacity 0.3s ease; }
+    .hamburger:hover { opacity: 0.7; }
+    .hamburger div { width: 25px; height: 3px; background-color: #ffffff; margin: 4px 0; transition: background-color 0.3s ease; }
+    .hamburger:hover div { background-color: #fdd835; }
+
+    nav { display: none; flex-direction: column; background-color: #333333; padding: 1rem; }
+    nav a { font-family: 'Open Sans', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff; text-decoration: none; padding: 0.5rem 0; transition: color 0.3s ease, letter-spacing 0.3s ease; }
+    nav a:hover { color: #fdd835; letter-spacing: 0.15em; }
+
+    /* Hero Section */
+    .hero { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left; padding: 0 1.5rem 0.5rem; background-color: #9C6E3D; }
+    .hero-content { max-width: 600px; width: 100%; padding-top: 1rem; margin: 0; }
+    .hero h1 { font-family: 'Libre Baskerville', serif; font-weight: 400; font-size: clamp(1.75rem, 5vw, 3rem); line-height: 1.2; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+    .hero p { font-size: clamp(1rem, 2.5vw, 1.25rem); line-height: 1.6; letter-spacing: 0.03em; margin-bottom: 1rem; }
+
+    /* Donation Button */
+    .donate-button { background-color: #fdd835; border: none; border-radius: 25px; padding: clamp(0.5rem,1.5vw,1rem) clamp(1.5rem,4vw,2rem); font-family:'Open Sans',sans-serif; font-weight:700; font-size:clamp(1rem,2vw,1.5rem); cursor:pointer; transition:transform 0.3s ease,box-shadow 0.3s ease; }
+    .donate-button:hover { background-color:#e0c230; box-shadow:0 4px 12px rgba(0,0,0,0.2); transform:scale(1.05); }
+
+    /* Image Section */
+    .image-section { width:100%; overflow:hidden; margin-top:1rem; }
+    .image-section img { width:100%; height:auto; display:block; }
+
+    /* Donation Popup - hidden by default */
+    #donation-popup { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+    #donation-popup .popup-content { background:#ffffff; color:#1c1c1c; padding:2rem; border-radius:8px; max-width:90%; width:300px; text-align:center; display:flex; flex-direction:column; }
+    #donation-popup input { width:100%; padding:0.5rem; margin:1rem 0; font-size:1rem; border:1px solid #ccc; border-radius:4px; }
+    #donation-popup button { margin:0.5rem 0; padding:0.5rem; border:none; border-radius:4px; cursor:pointer; font-weight:600; }
+    #donation-popup .submit-btn { background:#fdd835; }
+    #donation-popup .cancel-btn { background:#ccc; }
+
+    /* Mission Section inside Hero */
+    .mission { margin-top:1rem; padding-top:2rem; background:transparent; color:#ffffff; text-align:left; }
+    .mission h2 { font-family:'Libre Baskerville',serif; font-size:2rem; margin-bottom:0.5rem; }
+    .mission p { font-size:1rem; line-height:1.6; }
+
+    /* Desktop Layout */
+    @media (min-width:800px) {
+      nav { display:flex!important; flex-direction:row; justify-content:flex-end; gap:1.5rem; }
+      .hamburger { display:none; }
+      .hero { flex-direction:row; justify-content:space-between; padding:1.5rem; min-height:50vh; }
+      .hero-content { width:50%; display:flex; flex-direction:column; justify-content:flex-start; padding-right:1rem; }
+      .image-section { width:50%; margin-top:0; position:relative; }
+      .image-section::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to left,rgba(156,110,61,0)50%,rgba(156,110,61,1)100%); pointer-events:none; }
+      .image-section img { height:100%; object-fit:cover; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Hero Section: This is the main banner at the top of the page -->
-    <section class="hero">
-        <!-- Main headline -->
-        <h1>Clean Water for Everyone</h1>
-        <!-- Subheadline -->
-        <p>Join us in bringing safe, clean water to communities in need.</p>
-    </section>
+  <header>
+    <div class="logo">
+      <img src="https://www.charitywater.org/favicon.ico" width="24" height="24" alt="Charity: Water logo">
+      charity: water
+    </div>
+    <div class="hamburger" onclick="toggleNav()">
+      <div></div><div></div><div></div>
+    </div>
+    <nav id="nav">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Projects</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Your Gift. Their Water.<br>Full Transparency.</h1>
+      <p>Support water projects you can see and share, every step of the way.</p>
+      <button class="donate-button" onclick="openDonationPopup()">Donate Now</button>
+      <div class="mission">
+        <h2>Our Mission at charity: water</h2>
+        <p>At charity: water, our mission is to bring clean, safe drinking water to communities in need around the world. We prioritize 100% transparency: every donation you make directly funds water projects, tracked via GPS, and accompanied by regular updates so you can see exactly where and how your gift is making an impact.</p>
+      </div>
+    </div>
+    <div class="image-section">
+      <img src="https://raw.githubusercontent.com/TheFocus31/Image-upload/refs/heads/main/watercary.jpg" alt="charity water project">
+    </div>
+  </section>
 
-    <!-- Story Section: This tells the story of the nonprofit -->
-    <section class="story">
-        <h2>Our Story</h2>
-        <p>
-         
-    </section>
+  <!-- Donation Popup -->
+  <div id="donation-popup">
+    <div class="popup-content">
+      <h2>Enter an amount to give</h2>
+      <input type="text" id="donationAmount" placeholder="$ USD">
+      <button class="submit-btn" onclick="submitDonation()">Submit</button>
+      <button class="cancel-btn" onclick="closeDonationPopup()">Cancel</button>
+    </div>
+  </div>
 
-    <!-- Real-World Impact Story Section -->
-    <section class="impact-story">
-        <!-- Section headline -->
-        <h2>Real Impact: Meet Amina</h2>
-        <!-- Container for image and text -->
-        <div class="impact-content">
-            <!-- Impact image -->
-            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Amina smiling with clean water" class="impact-image">
-            <!-- Impact story text -->
-            <p>
-                Amina used to walk miles every day to collect water for her family. Thanks to your support, her village now has a clean water well. Amina can go to school and her family is healthier and happier.
-            </p>
-        </div>
-    </section>
-
-    <!-- Call-to-Action Section: This encourages visitors to take action -->
-    <section class="call-to-action">
-        <h2>Make a Difference</h2>
-        <p>Your support can help save lives. Every donation brings us closer to a world with clean water for all.</p>
-        <a href="#" class="donate-button">Donate Now</a>
-    </section>
+  <script>
+    function toggleNav() { const nav = document.getElementById('nav'); nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex'; }
+    function openDonationPopup() { document.getElementById('donation-popup').style.display = 'flex'; }
+    function closeDonationPopup() { document.getElementById('donation-popup').style.display = 'none'; }
+    function submitDonation() { const input = document.getElementById('donationAmount'); const amount = input.value.replace(/\D/g, ''); if (amount && Number(amount)>0) { alert(`Thank you for donating $${amount}!`); closeDonationPopup(); input.value=''; } else { alert('Please enter a valid amount.'); } }
+    document.getElementById('donationAmount').addEventListener('input', function(e){ let val=e.target.value.replace(/\D/g,''); e.target.value=val? '$'+val: ''; });
+  </script>
 </body>
 </html>
